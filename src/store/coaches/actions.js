@@ -25,7 +25,9 @@ export default {
       id: userId
     });
   },
-  async loadCoaches(ctx) {
+  async loadCoaches(ctx, payload) {
+    if (!payload && !ctx.getters.shouldUpdate) return;
+
     const res = await fetch(
       `https://vue-academind-bb347-default-rtdb.europe-west1.firebasedatabase.app/coaches.json`
     );
@@ -47,5 +49,6 @@ export default {
       coaches.push(coach);
     }
     ctx.commit('SET_COACHES', coaches);
+    ctx.commit('SET_FETCH_TIMESTAMP');
   }
 };

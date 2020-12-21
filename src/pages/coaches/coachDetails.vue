@@ -2,6 +2,9 @@
   <section>
     <base-card>
       <h2>{{ fullName }}</h2>
+      <p>
+        {{ description }}
+      </p>
       <h3>${{ rate }}/hour</h3>
     </base-card>
   </section>
@@ -45,7 +48,7 @@ export default {
       return `${this.selectedCoach.firstName} ${this.selectedCoach.lastName}`;
     },
     contactLink() {
-      return `${this.$route.path}/${this.id}/contact`;
+      return `${this.$route.path}/contact`;
     },
     areas() {
       return this.selectedCoach.areas;
