@@ -30,8 +30,9 @@ export default {
       `https://vue-academind-bb347-default-rtdb.europe-west1.firebasedatabase.app/coaches.json`
     );
     const resData = await res.json();
-    if (res.ok) {
-      // err
+    if (!res.ok) {
+      const err = new Error(resData.message || 'Failed to fetch');
+      throw err;
     }
     const coaches = [];
     for (let key in resData) {
