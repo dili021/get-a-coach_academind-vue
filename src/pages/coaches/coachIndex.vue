@@ -5,10 +5,15 @@
   <section>
     <base-card>
       <div class="controls">
-        <base-button mode="flat">Refresh</base-button>
-        <base-button v-if="!isCoach" link to="/register">Register</base-button>
+        <base-button @click="fetchCoaches" mode="flat">Refresh</base-button>
+        <base-button v-if="!isCoach && !isLoading" link to="/register"
+          >Register</base-button
+        >
       </div>
-      <ul v-if="hasCoaches">
+      <div v-if="isLoading">
+        <base-spinner></base-spinner>
+      </div>
+      <ul v-else-if="hasCoaches && !isLoading">
         <coach-item
           v-for="coach in filteredCoaches"
           :id="coach.id"
@@ -25,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import BaseCard from '../../components/UI/BaseCard';
 import CoachItem from '../../components/coaches/CoachItem';
 import BaseButton from '../../components/UI/BaseButton.vue';
@@ -39,6 +44,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       activeFilters: {
         frontend: true,
         backend: true,
@@ -47,9 +53,18 @@ export default {
     };
   },
   methods: {
+    ...mapActions('coaches', ['loadCoaches']),
     setFilter(updatedFilters) {
       this.activeFilters = updatedFilters;
+    },
+    async fetchCoaches() {
+      this.isLoading = true;
+      await this.loadCoaches();
+      this.isLoading = false;
     }
+  },
+  created() {
+    this.fetchCoaches();
   },
   computed: {
     ...mapGetters('coaches', ['hasCoaches', 'isCoach']),
